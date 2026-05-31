@@ -37,7 +37,7 @@ uint64_t montmulodd(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntr
 	return fromMontgomeryForm(result, modEntry);
 }
 
-uint64_t findresultpwr2(uint64_t result1, uint64_t result2, uint64_t pwr2, ModEntry oddEntry, uint64_t modulus) {
+uint64_t semiCRTpwr2(uint64_t result1, uint64_t result2, uint64_t pwr2, ModEntry oddEntry, uint64_t modulus) {
 	uint64_t result = result1;
 	while (result < modulus) {
 		if (montmulodd(result, 1, oddEntry) == result2) {
@@ -48,7 +48,7 @@ uint64_t findresultpwr2(uint64_t result1, uint64_t result2, uint64_t pwr2, ModEn
 	return 0; // error
 }
 
-uint64_t findresultodd(uint64_t result1, uint64_t result2, uint64_t pwr2, uint64_t odd, uint64_t modulus) {
+uint64_t semiCRTodd(uint64_t result1, uint64_t result2, uint64_t pwr2, uint64_t odd, uint64_t modulus) {
 	uint64_t result = result2;
 	while (result < modulus) {
 		if (montmulpwr2(result, 1, pwr2) == result1) {
@@ -59,13 +59,13 @@ uint64_t findresultodd(uint64_t result1, uint64_t result2, uint64_t pwr2, uint64
 	return 0; // error
 }
 
-uint64_t findresult(uint64_t result1, uint64_t result2, uint64_t pwr2, ModEntry oddEntry, uint64_t modulus) {
+uint64_t semiCRT(uint64_t result1, uint64_t result2, uint64_t pwr2, ModEntry oddEntry, uint64_t modulus) {
 	const uint64_t odd = oddEntry.modulus;
 	if (pwr2 >= odd) {
-		return findresultpwr2(result1, result2, pwr2, oddEntry, modulus);
+		return semiCRTpwr2(result1, result2, pwr2, oddEntry, modulus);
 	}
 	else {
-		return findresultodd(result1, result2, pwr2, odd, modulus);
+		return semiCRTodd(result1, result2, pwr2, odd, modulus);
 	}
 }
 
@@ -76,7 +76,7 @@ uint64_t montmuleven(uint64_t multiplier, uint64_t multiplicand, ModEntry modEnt
 	const ModEntry oddEntry = makeModEntry(odd, modEntry.neginv, modEntry.auxmodsq);
 	const uint64_t result1 = montmulpwr2(multiplier, multiplicand, 1LL << pwr2);
 	const uint64_t result2 = montmulodd(multiplier, multiplicand, oddEntry);
-	return findresult(result1, result2, pwr2, oddEntry, modulus);
+	return semiCRT(result1, result2, pwr2, oddEntry, modulus);
 }
 
 uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) {
