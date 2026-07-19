@@ -2,10 +2,6 @@
 #include <stdbit.h>
 #include "montmul.h"
 
-ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq) {
-	return (ModEntry){modulus, neginv, auxmodsq};
-}
-
 uint64_t REDC(__uint128_t operand, ModEntry modEntry) {
 	const uint64_t modulus = modEntry.modulus;
 	const uint64_t m = ((__uint128_t)(operand & UINT64_MAX) * modEntry.neginv) & UINT64_MAX;
@@ -32,37 +28,7 @@ uint64_t montmulodd(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntr
 	return fromMontgomeryForm(result, modEntry);
 }
 
-uint64_t semiCRTpwr2(uint64_t result1, uint64_t result2, uint64_t pwr2, ModEntry oddEntry, uint64_t modulus) {
-	uint64_t result = result1;
-	while (result < modulus) {
-		if (montmulodd(result, 1, oddEntry) == result2) {
-			return result;
-		}
-		result += pwr2;
-	}
-	return 0; // error
-}
-
-uint64_t semiCRTodd(uint64_t result1, uint64_t result2, uint64_t pwr2, uint64_t odd, uint64_t modulus) {
-	uint64_t result = result2;
-	while (result < modulus) {
-		if (montmulpwr2(result, 1, pwr2) == result1) {
-			return result;
-		}
-		result += odd;
-	}
-	return 0; // error
-}
-
-uint64_t semiCRT(uint64_t result1, uint64_t result2, uint64_t pwr2, ModEntry oddEntry, uint64_t modulus) {
-	const uint64_t odd = oddEntry.modulus;
-	if (pwr2 >= odd) {
-		return semiCRTpwr2(result1, result2, pwr2, oddEntry, modulus);
-	}
-	else {
-		return semiCRTodd(result1, result2, pwr2, odd, modulus);
-	}
-}
+uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2, uint64 modr);
 
 uint64_t montmuleven(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) {
 	const uint64_t modulus = modEntry.modulus;
@@ -71,7 +37,7 @@ uint64_t montmuleven(uint64_t multiplier, uint64_t multiplicand, ModEntry modEnt
 	const ModEntry oddEntry = makeModEntry(odd, modEntry.neginv, modEntry.auxmodsq);
 	const uint64_t result1 = montmulpwr2(multiplier, multiplicand, 1LL << pwr2);
 	const uint64_t result2 = montmulodd(multiplier, multiplicand, oddEntry);
-	return semiCRT(result1, result2, pwr2, oddEntry, modulus);
+	return semiCRT(result1, (ModEntry){pwr2, 0, 0}, result2, oddEntry, modulus);
 }
 
 uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) {
@@ -85,6 +51,59 @@ uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) 
 	else {
 		return montmulodd(multiplier, multiplicand, modEntry);
 	}
+}
+
+uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2, uint64 modr) {
+	uint64_t mod1 = mod1.modulus;
+	uint64_t mod2 = mod2.modulus;
+	if (mod1 < mod2) {
+		{
+			uint64_t t = N2;
+			N2 = N1;
+			N1 = t;
+		}
+		{
+			uint64_t t = res2;
+			res2 = res1;
+			res1 = t;
+		}
+		ModEntry tempMod = mod2;
+		mod2 = mod1;
+		mod1 = tempMod;
+	}
+	for (uint64_t i = 0; res1 + i * N1 < modr; i++) {
+		if (montmul(res1 + i * N1, 1, mod2) == res2) {
+			return res1 + i * N1;
+		}
+	}
+	return 0;
+}
+
+ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq) {
+	return (ModEntry){modulus, neginv, auxmodsq};
+}
+
+// We assume at most one of the operands to bear an even modulus.
+ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2) {
+	const modulus1 = operand1.modulus;
+	const modulus2 = operand2.modulus;
+	const modulusr = modulus1 * modulus2;
+
+	if ((modulus1 & 0b1) == 0) {
+		return (ModEntry){modulusr, neginv2, auxmodsq2};
+	}
+	if ((modulus2 & 0b1) == 0) {
+		return (ModEntry){modulusr, neginv1, auxmodsq1};
+	}
+
+	const neginv1 = operand1.neginv;
+	const neginv2 = operand2.neginv;
+
+	const neginvr = -neginv1 * neginv2;
+
+	const auxmodsq1 = operand1.auxmodsq;
+	const auxmodsq2 = operand2.auxmodsq;
+	const ausmodsqr = semiCRT()
 }
 
 int main(void) {
