@@ -28,7 +28,7 @@ uint64_t montmulodd(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntr
 	return fromMontgomeryForm(result, modEntry);
 }
 
-uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2, uint64 modr);
+uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2, uint64_t modr);
 
 uint64_t montmuleven(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) {
 	const uint64_t modulus = modEntry.modulus;
@@ -53,27 +53,27 @@ uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) 
 	}
 }
 
-uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2, uint64 modr) {
-	uint64_t mod1 = mod1.modulus;
-	uint64_t mod2 = mod2.modulus;
+uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2, uint64_t modr) {
+	uint64_t mod1 = entry1.modulus;
+	uint64_t mod2 = entry2.modulus;
 	if (mod1 < mod2) {
 		{
-			uint64_t t = N2;
-			N2 = N1;
-			N1 = t;
+			uint64_t t = mod2;
+			mod2 = mod1;
+			mod1 = t;
 		}
 		{
 			uint64_t t = res2;
 			res2 = res1;
 			res1 = t;
 		}
-		ModEntry tempMod = mod2;
-		mod2 = mod1;
-		mod1 = tempMod;
+		ModEntry tempMod = entry2;
+		entry2 = entry1;
+		entry1 = tempMod;
 	}
-	for (uint64_t i = 0; res1 + i * N1 < modr; i++) {
-		if (montmul(res1 + i * N1, 1, mod2) == res2) {
-			return res1 + i * N1;
+	for (uint64_t i = 0; res1 + i * mod1 < modr; i++) {
+		if (montmul(res1 + i * mod1, 1, entry2) == res2) {
+			return res1 + i * mod1;
 		}
 	}
 	return 0;
@@ -85,9 +85,12 @@ ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq) {
 
 // We assume at most one of the operands to bear an even modulus.
 ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2) {
-	const modulus1 = operand1.modulus;
-	const modulus2 = operand2.modulus;
-	const modulusr = modulus1 * modulus2;
+	const uint64_t modulus1 = operand1.modulus;
+	const uint64_t modulus2 = operand2.modulus;
+	const uint64_t modulusr = modulus1 * modulus2;
+
+	const uint64_t neginv1 = operand1.neginv;
+	const uint64_t neginv2 = operand2.neginv;
 
 	if ((modulus1 & 0b1) == 0) {
 		return (ModEntry){modulusr, neginv2, auxmodsq2};
@@ -96,14 +99,12 @@ ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2) {
 		return (ModEntry){modulusr, neginv1, auxmodsq1};
 	}
 
-	const neginv1 = operand1.neginv;
-	const neginv2 = operand2.neginv;
-
 	const neginvr = -neginv1 * neginv2;
 
-	const auxmodsq1 = operand1.auxmodsq;
-	const auxmodsq2 = operand2.auxmodsq;
-	const ausmodsqr = semiCRT()
+	const uint64_t auxmodsq1 = operand1.auxmodsq;
+	const uint64_t auxmodsq2 = operand2.auxmodsq;
+	const uint64_t ausmodsqr = semiCRT(auxmodsq1, entry1, auxmodsq2, entry2, modulusr);
+	return (ModEntry){modulusr, neginvr, auxmodsqr};
 }
 
 int main(void) {
