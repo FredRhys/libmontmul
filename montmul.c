@@ -1,11 +1,6 @@
 #include <stdint.h>
 #include <stdbit.h>
-
-typedef struct ModEntry{
-	uint64_t modulus;
-	uint64_t neginv;
-	uint64_t auxmodsq;
-}ModEntry;
+#include "montmul.h"
 
 ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq) {
 	return (ModEntry){modulus, neginv, auxmodsq};
