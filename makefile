@@ -1,13 +1,11 @@
 CC = gcc
 LD = $(CC)
 CFLAGS = -std=c23\
+		 -g\
 		 -Wall\
-		 -Werror\
-		 -Wextra\
 		 -pedantic\
-		 -O3\
-		 -march=native\
-		 -fopenmp
+		 -fsanitize=undefined\
+		 -fsanitize=address
 
 .PHONY: test
 test: test.o montmul.o
