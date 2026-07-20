@@ -41,14 +41,15 @@ uint64_t montmuleven(uint64_t multiplier, uint64_t multiplicand, ModEntry modEnt
 uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) {
 	const uint64_t modulus = modEntry.modulus;
 	if (__builtin_popcountll(modulus) == 1) {
+		// modulus is a power of 2.
 		return montmulpwr2(multiplier, multiplicand, modulus);
 	}
-	else if ((modulus & 0b1) == 0) {
+	if ((modulus & 0b1) == 0) {
+		// modulus is an even number but not a power of 2.
 		return montmuleven(multiplier, multiplicand, modEntry);
 	}
-	else {
-		return montmulodd(multiplier, multiplicand, modEntry);
-	}
+	// modulus is odd.
+	return montmulodd(multiplier, multiplicand, modEntry);
 }
 
 uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2, uint64_t modr) {
@@ -70,9 +71,8 @@ uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2,
 		entry1 = tempMod;
 	}
 	for (uint64_t i = 0; res1 + i * mod1 < modr; i++) {
-		if (montmul(res1 + i * mod1, 1, entry2) == res2) {
-			return res1 + i * mod1;
-		}
+		if (montmul(res1 + i * mod1, 1, entry2) != res2) {continue;}
+		return res1 + i * mod1;
 	}
 	return 0;
 }
