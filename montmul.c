@@ -83,29 +83,29 @@ ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq) {
 	return (ModEntry){modulus, neginv, auxmodsq};
 }
 
-// We assume at most one of the operands to bear an even modulus.
-ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2) {
-	const uint64_t modulus1 = operand1.modulus;
-	const uint64_t modulus2 = operand2.modulus;
-	const uint64_t modulusr = modulus1 * modulus2;
+// // We assume at most one of the operands to bear an even modulus.
+// ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2) {
+// 	const uint64_t modulus1 = operand1.modulus;
+// 	const uint64_t modulus2 = operand2.modulus;
+// 	const uint64_t modulusr = modulus1 * modulus2;
 
-	const uint64_t neginv1 = operand1.neginv;
-	const uint64_t neginv2 = operand2.neginv;
+// 	const uint64_t neginv1 = operand1.neginv;
+// 	const uint64_t neginv2 = operand2.neginv;
 
-	if ((modulus1 & 0b1) == 0) {
-		return (ModEntry){modulusr, neginv2, auxmodsq2};
-	}
-	if ((modulus2 & 0b1) == 0) {
-		return (ModEntry){modulusr, neginv1, auxmodsq1};
-	}
+// 	if ((modulus1 & 0b1) == 0) {
+// 		return (ModEntry){modulusr, neginv2, auxmodsq2};
+// 	}
+// 	if ((modulus2 & 0b1) == 0) {
+// 		return (ModEntry){modulusr, neginv1, auxmodsq1};
+// 	}
 
-	const neginvr = -neginv1 * neginv2;
+// 	const neginvr = -neginv1 * neginv2;
 
-	const uint64_t auxmodsq1 = operand1.auxmodsq;
-	const uint64_t auxmodsq2 = operand2.auxmodsq;
-	const uint64_t ausmodsqr = semiCRT(auxmodsq1, entry1, auxmodsq2, entry2, modulusr);
-	return (ModEntry){modulusr, neginvr, auxmodsqr};
-}
+// 	const uint64_t auxmodsq1 = operand1.auxmodsq;
+// 	const uint64_t auxmodsq2 = operand2.auxmodsq;
+// 	const uint64_t ausmodsqr = semiCRT(auxmodsq1, entry1, auxmodsq2, entry2, modulusr);
+// 	return (ModEntry){modulusr, neginvr, auxmodsqr};
+// }
 
 int main(void) {
 	return 0;
