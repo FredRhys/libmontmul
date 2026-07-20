@@ -1,5 +1,3 @@
-#include <stdint.h>
-#include <stdbit.h>
 #include "montmul.h"
 
 uint64_t REDC(__uint128_t operand, ModEntry modEntry) {
@@ -106,7 +104,3 @@ ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq) {
 // 	const uint64_t ausmodsqr = semiCRT(auxmodsq1, entry1, auxmodsq2, entry2, modulusr);
 // 	return (ModEntry){modulusr, neginvr, auxmodsqr};
 // }
-
-int main(void) {
-	return 0;
-}

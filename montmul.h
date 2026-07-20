@@ -1,6 +1,9 @@
 #ifndef MONTMUL_H
 
 #define MONTMUL_H
+#include <stdbit.h>
+#include <stdint.h>
+
 
 typedef struct ModEntry{
 	uint64_t modulus;

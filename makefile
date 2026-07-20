@@ -9,10 +9,12 @@ CFLAGS = -std=c23\
 		 -march=native\
 		 -fopenmp
 
-main: montmul.c
-	$(LD) $(CFLAGS) montmul.c -o montmul
+.PHONY: test
+test: test.o montmul.o
+	$(LD) $(CFLAGS) -o montmul test.o montmul.o 
 
-debug: montmul.c
-	$(LD) $(CFLAGS) -fsanitize=address -fsanitize=undefined -g montmul.c -o montmul
+test.o: test.c montmul.h
 
-default: main
+montmul.o: montmul.c montmul.h
+
+default: test
