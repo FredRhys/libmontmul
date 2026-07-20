@@ -31,11 +31,12 @@ uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2,
 uint64_t montmuleven(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) {
 	const uint64_t modulus = modEntry.modulus;
 	const uint64_t pwr2 = __builtin_ctzll(modulus);
+	const uint64_t modpwr2 = (1ULL << pwr2);
 	const uint64_t odd = modulus >> pwr2;
 	const ModEntry oddEntry = makeModEntry(odd, modEntry.neginv, modEntry.auxmodsq);
-	const uint64_t result1 = montmulpwr2(multiplier, multiplicand, 1LL << pwr2);
+	const uint64_t result1 = montmulpwr2(multiplier, multiplicand, modpwr2);
 	const uint64_t result2 = montmulodd(multiplier, multiplicand, oddEntry);
-	return semiCRT(result1, (ModEntry){pwr2, 0, 0}, result2, oddEntry, modulus);
+	return semiCRT(result1, (ModEntry){modpwr2, 0, 0}, result2, oddEntry, modulus);
 }
 
 uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) {
@@ -70,6 +71,7 @@ uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2,
 		entry2 = entry1;
 		entry1 = tempMod;
 	}
+
 	for (uint64_t i = 0; res1 + i * mod1 < modr; i++) {
 		if (montmul(res1 + i * mod1, 1, entry2) != res2) {continue;}
 		return res1 + i * mod1;

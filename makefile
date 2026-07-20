@@ -9,7 +9,7 @@ CFLAGS = -std=c23\
 
 .PHONY: test
 test: test.o montmul.o
-	$(LD) $(CFLAGS) -o montmul test.o montmul.o 
+	$(LD) $(CFLAGS) -o test test.o montmul.o 
 
 test.o: test.c montmul.h
 
