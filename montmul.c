@@ -102,7 +102,13 @@ ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2) {
 		return makeModEntry(modulusr, neginv1, auxmodsq1);
 	}
 
-	const neginvr = -neginv1 * neginv2;
+	const uint64_t neginvr = -neginv1 * neginv2;
 	const uint64_t auxmodsqr = semiCRT(auxmodsq1, operand1, auxmodsq2, operand2, modulusr);
 	return makeModEntry(modulusr, neginvr, auxmodsqr);
+}
+
+bool modEntriesEqual(ModEntry operand1, ModEntry operand2) {
+	return operand1.modulus == operand2.modulus &&
+		operand1.neginv == operand2.neginv &&
+		operand1.auxmodsq == operand2.auxmodsq;
 }
