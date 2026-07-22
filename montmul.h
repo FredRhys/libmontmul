@@ -3,7 +3,6 @@
 #define MONTMUL_H
 #include <stdbit.h>
 #include <stdint.h>
-#include <stdio.h>
 
 
 typedef struct ModEntry{
