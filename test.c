@@ -2,7 +2,8 @@
 #include <assert.h>
 #include <stdio.h>
 
-int main(void) {
+
+void testArithmetic(void) {
     // Odd prime moduli
     {
         ModEntry modEntry = makeModEntry(5, 3689348814741910323, 1);
@@ -47,6 +48,39 @@ int main(void) {
         assert(montmul(12345, 67890, modEntry) == 30);
         assert(montmul(1234, 6789, modEntry) == 26);
     }
+}
 
+void testEntriesEqual(void) {
+    ModEntry modEntry = makeModEntry(5, 3689348814741910323, 1);
+    assert(modEntriesEqual(modEntry, modEntry));
+    assert(!modEntriesEqual(modEntry, (ModEntry){5, 3689348814741910323, 2}));
+}
+
+void testCombo(void) {
+    {
+        ModEntry entry1 = makeModEntry(5, 3689348814741910323, 1);
+        ModEntry entry2 = makeModEntry(13, 12770822820260458811ULL, 9);
+        ModEntry expected = makeModEntry(65, 17311559823019733055ULL, 61);
+        ModEntry actual = combineCoprimeModEntries(entry1, entry2);
+        assert(modEntriesEqual(actual, expected));
+    }{
+        ModEntry entry1 = makeModEntry(5, 3689348814741910323, 1);
+        ModEntry entry2 = makeModEntry(2, 0, 0);
+        ModEntry expected = makeModEntry(10, 3689348814741910323, 1);
+        ModEntry actual = combineCoprimeModEntries(entry1, entry2);
+        assert(modEntriesEqual(actual, expected));
+    }{
+        ModEntry entry1 = makeModEntry(5, 3689348814741910323, 1);
+        ModEntry entry2 = makeModEntry(2, 0, 0);
+        ModEntry expected = makeModEntry(10, 3689348814741910323, 1);
+        ModEntry actual = combineCoprimeModEntries(entry2, entry1);
+        assert(modEntriesEqual(actual, expected));
+    }
+}
+
+int main(void) {
+    (void)testArithmetic();
+    (void)testEntriesEqual();
+    (void)testCombo();
     return 0;
 }
