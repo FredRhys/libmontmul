@@ -83,6 +83,30 @@ ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq) {
 	return (ModEntry){modulus, neginv, auxmodsq};
 }
 
+uint64_t calcAuxmodsq(uint64_t modulus) {
+	const uint64_t auxmodsq = ~((__uint128_t)0) % modulus + 1;
+	return (auxmodsq == modulus) ? 0 : auxmodsq;
+}
+
+uint64_t calcNeginv(uint64_t modulus) {
+	uint64_t result = 1;
+	uint64_t bitmask = 1;
+	for (uint8_t i = 1; i <= 64; i++) {
+		bitmask = (bitmask << 1) + 1;
+		result = - (((__uint128_t)(modulus - 1) * result + 1) & bitmask);
+	}
+	return result;
+}
+
+ModEntry primeEntry(uint64_t prime) {
+	if (prime != 2) {
+		return makeModEntry(prime,
+			calcNeginv(prime),
+			calcAuxmodsq(prime));
+	}
+	return (ModEntry){2, 0, 0};
+}
+
 // // We assume at most one of the operands to bear an even modulus.
 ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2) {
 	const uint64_t modulus1 = operand1.modulus;
