@@ -12,6 +12,8 @@ This was initially implemented for my fourth-year university project, and is the
 ## Creating new ModEntries
 * ```ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq)```
   * Takes as input the values required for a ModEntry and combines them into a ModEntry. Performs no checks on them whatsoever.
+* ```ModEntry primeModEntry(uint64_t prime);```
+  * Takes as input a prime number and returns the correct corresponding ModEntry. Performs no primality check on the input.
 * ```ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2)```
   * Takes as input two ModEntries and returns the ModEntry associated with the product of the inputs' moduli. Only works as intended if the moduli of the inputs are coprime.
 
