@@ -107,7 +107,15 @@ ModEntry primeModEntry(uint64_t prime) {
 	return makeModEntry(2, 0, 0);
 }
 
-// // We assume at most one of the operands to bear an even modulus.
+// We assume the prime of the prime power to be the same as that given as `prime.'
+ModEntry increasePrimeModEntryPower(ModEntry powerEntry, ModEntry primeEntry) {
+	const uint64_t newModulus = powerEntry.modulus * primeEntry.modulus;
+	const uint64_t newNeginv = -powerEntry.neginv * primeEntry.neginv;
+	const uint64_t newAuxmodsq = calcAuxmodsq(newModulus);
+	return makeModEntry(newModulus, newNeginv, newAuxmodsq);
+}
+
+// We assume at most one of the operands to bear an even modulus.
 ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2) {
 	const uint64_t modulus1 = operand1.modulus;
 	const uint64_t modulus2 = operand2.modulus;

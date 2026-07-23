@@ -96,9 +96,31 @@ void testMakePrime(void) {
     }
 }
 
+void testIncreasePrimePower(void) {
+    {
+        ModEntry prime = makeModEntry(5, 3689348814741910323, 1);
+        ModEntry expected1 = makeModEntry(25, 8116567392432202711, 6);
+        ModEntry actual1 = increasePrimeModEntryPower(prime, prime);
+        assert(modEntriesEqual(actual1, expected1));
+        ModEntry expected2 = makeModEntry(125, 16380708737454081835ULL, 81);
+        ModEntry actual2 = increasePrimeModEntryPower(actual1, prime);
+        assert(modEntriesEqual(actual2, expected2));
+    }
+    {
+        ModEntry prime = makeModEntry(13, 12770822820260458811ULL, 9);
+        ModEntry expected1 = makeModEntry(169, 982370986173881447, 48);
+        ModEntry actual1 = increasePrimeModEntryPower(prime, prime);
+        assert(modEntriesEqual(actual1, expected1));
+        ModEntry expected2 = makeModEntry(2197, 75566998936452419, 217);
+        ModEntry actual2 = increasePrimeModEntryPower(actual1, prime);
+        assert(modEntriesEqual(actual2, expected2));
+    }
+}
+
 int main(void) {
     (void)testArithmetic();
     (void)testEntriesEqual();
     (void)testCombo();
+    (void)testIncreasePrimePower();
     return 0;
 }
