@@ -14,7 +14,7 @@ typedef struct ModEntry{
 ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq);
 ModEntry primeModEntry(uint64_t prime);
 ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2);
-// ModEntry increasePrimeModEntryPower(ModEntry operand, uint64_t prime);
+ModEntry increasePrimeModEntryPower(ModEntry powerEntry, ModEntry primeEntry);
 uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry);
 bool modEntriesEqual(ModEntry operand1, ModEntry operand2);
 
