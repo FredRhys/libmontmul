@@ -33,10 +33,10 @@ uint64_t montmuleven(uint64_t multiplier, uint64_t multiplicand, ModEntry modEnt
 	const uint64_t pwr2 = __builtin_ctzll(modulus);
 	const uint64_t modpwr2 = (1ULL << pwr2);
 	const uint64_t odd = modulus >> pwr2;
-	const ModEntry oddEntry = makeModEntry(odd, modEntry.neginv, modEntry.auxmodsq);
+	const ModEntry oddEntry = makeModEntry(odd, modEntry.neginv, modEntry.auxmodsq, modEntry.totient);
 	const uint64_t result1 = montmulpwr2(multiplier, multiplicand, modpwr2);
 	const uint64_t result2 = montmulodd(multiplier, multiplicand, oddEntry);
-	return semiCRT(result1, (ModEntry){modpwr2, 0, 0}, result2, oddEntry, modulus);
+	return semiCRT(result1, makeModEntry(modpwr2, 0, 0, 0), result2, oddEntry, modulus);
 }
 
 uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) {
@@ -79,8 +79,8 @@ uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2,
 	return 0;
 }
 
-ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq) {
-	return (ModEntry){modulus, neginv, auxmodsq};
+ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq, uint64_t totient) {
+	return (ModEntry){modulus, neginv, auxmodsq, totient};
 }
 
 uint64_t calcAuxmodsq(uint64_t modulus) {
@@ -102,17 +102,20 @@ ModEntry primeModEntry(uint64_t prime) {
 	if (prime != 2) {
 		return makeModEntry(prime,
 			calcNeginv(prime),
-			calcAuxmodsq(prime));
+			calcAuxmodsq(prime),
+			prime - 1);
 	}
-	return makeModEntry(2, 0, 0);
+	return makeModEntry(2, 0, 0, 1);
 }
 
 // We assume the prime of the prime power to be the same as that given as `prime.'
 ModEntry increasePrimeModEntryPower(ModEntry powerEntry, ModEntry primeEntry) {
-	const uint64_t newModulus = powerEntry.modulus * primeEntry.modulus;
+	const uint64_t oldModulus = powerEntry.modulus;
+	const uint64_t newModulus = oldModulus * primeEntry.modulus;
 	const uint64_t newNeginv = -powerEntry.neginv * primeEntry.neginv;
 	const uint64_t newAuxmodsq = calcAuxmodsq(newModulus);
-	return makeModEntry(newModulus, newNeginv, newAuxmodsq);
+	const uint64_t newTotient = newModulus - oldModulus;
+	return makeModEntry(newModulus, newNeginv, newAuxmodsq, newTotient);
 }
 
 // We assume at most one of the operands to bear an even modulus.
@@ -127,20 +130,25 @@ ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2) {
 	const uint64_t auxmodsq1 = operand1.auxmodsq;
 	const uint64_t auxmodsq2 = operand2.auxmodsq;
 
+	const uint64_t totient1 = operand1.totient;
+	const uint64_t totient2 = operand2.totient;
+
 	if ((modulus1 & 0b1) == 0) {
-		return makeModEntry(modulusr, neginv2, auxmodsq2);
+		return makeModEntry(modulusr, neginv2, auxmodsq2, totient2);
 	}
 	if ((modulus2 & 0b1) == 0) {
-		return makeModEntry(modulusr, neginv1, auxmodsq1);
+		return makeModEntry(modulusr, neginv1, auxmodsq1, totient1);
 	}
 
 	const uint64_t neginvr = -neginv1 * neginv2;
 	const uint64_t auxmodsqr = semiCRT(auxmodsq1, operand1, auxmodsq2, operand2, modulusr);
-	return makeModEntry(modulusr, neginvr, auxmodsqr);
+	const uint64_t totientr = totient1 * totient2;
+	return makeModEntry(modulusr, neginvr, auxmodsqr, totientr);
 }
 
 bool modEntriesEqual(ModEntry operand1, ModEntry operand2) {
 	return operand1.modulus == operand2.modulus &&
 		operand1.neginv == operand2.neginv &&
-		operand1.auxmodsq == operand2.auxmodsq;
+		operand1.auxmodsq == operand2.auxmodsq &&
+		operand1.totient == operand2.totient;
 }
