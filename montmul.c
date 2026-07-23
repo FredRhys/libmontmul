@@ -98,13 +98,13 @@ uint64_t calcNeginv(uint64_t modulus) {
 	return result;
 }
 
-ModEntry primeEntry(uint64_t prime) {
+ModEntry primeModEntry(uint64_t prime) {
 	if (prime != 2) {
 		return makeModEntry(prime,
 			calcNeginv(prime),
 			calcAuxmodsq(prime));
 	}
-	return (ModEntry){2, 0, 0};
+	return makeModEntry(2, 0, 0);
 }
 
 // // We assume at most one of the operands to bear an even modulus.

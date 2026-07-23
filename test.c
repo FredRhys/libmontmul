@@ -78,6 +78,24 @@ void testCombo(void) {
     }
 }
 
+void testMakePrime(void) {
+    {
+        ModEntry expected = makeModEntry(5, 3689348814741910323, 1);
+        ModEntry actual = primeModEntry(5);
+        assert(modEntriesEqual(actual, expected));
+    }
+    {
+        ModEntry expected = makeModEntry(13, 12770822820260458811ULL, 9);
+        ModEntry actual = primeModEntry(13);
+        assert(modEntriesEqual(actual, expected));
+    }
+    {
+        ModEntry expected = makeModEntry(2, 0, 0);
+        ModEntry actual = primeModEntry(2);
+        assert(modEntriesEqual(actual, expected));
+    }
+}
+
 int main(void) {
     (void)testArithmetic();
     (void)testEntriesEqual();
