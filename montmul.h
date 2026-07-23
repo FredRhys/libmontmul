@@ -9,10 +9,9 @@ typedef struct ModEntry{
 	uint64_t modulus;
 	uint64_t neginv;
 	uint64_t auxmodsq;
-	uint64_t totient;
 }ModEntry;
 
-ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq, uint64_t totient);
+ModEntry makeModEntry(uint64_t modulus, uint64_t neginv, uint64_t auxmodsq);
 ModEntry primeModEntry(uint64_t prime);
 ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2);
 ModEntry increasePrimeModEntryPower(ModEntry powerEntry, ModEntry primeEntry);
