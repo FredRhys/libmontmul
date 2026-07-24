@@ -21,7 +21,17 @@ This was initially implemented for my fourth-year university project, and is the
 
 ## Arithmetic
 * ```uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry)```
-  * Performs a montgomery multiplication on two integers modulo the modulus containted in the ModEntry.
+  * Performs a montgomery multiplication on two integers modulo the modulus containted in the ModEntry. This need not be given integers already in Montgomery form.
+* ```uint64_t intermul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry)```
+  * Performs a montgomery multiplication on two integers already in Montgomery form. It does not convert them back from Montgomery form.
+* ```uint64_t montexp(uint64_t base, uint64_t exponent, ModEntry modEntry)```
+  * Performs modular exponentiation using an iterative binary exponentiation implementation. This need not be given a base already in Montgomery form.
+
+## Number-theoretic
+* ```uint64_t invmod(uint64_t residue, ModEntry modEntry)```
+  * Given a residue coprime with the modulus of the ModEntry, returns the modular inverse of the residue.
+* ```uint64_t legendre(uint64_t residue, ModEntry modEntry)```
+  * Calculates the [Legendre symbol](https://en.wikipedia.org/wiki/Legendre_symbol) of the residue with regard to the modulus of the ModEntry.
 
 ## Comparison
 * ```bool modEntriesEqual(ModEntry operand1, ModEntry operand2)```

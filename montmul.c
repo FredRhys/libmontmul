@@ -53,6 +53,73 @@ uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) 
 	return montmulodd(multiplier, multiplicand, modEntry);
 }
 
+uint64_t montexppwr2(uint64_t base, uint64_t exponent, uint64_t modulus) {
+	const uint64_t bitmask = modulus - 1;
+	uint64_t power = 1;
+	while (exponent > 0) {
+		if ((exponent & 0b1) == 1) {
+			power = ((__uint128_t)power * base) & bitmask;
+		}
+		base = ((__uint128_t)base * base) & bitmask;
+		exponent >>= 1;
+	}
+	return power;
+}
+
+uint64_t intermul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry) {
+	return REDC((__uint128_t)multiplier * multiplicand, modEntry);
+}
+
+uint64_t montexpodd(uint64_t base, uint64_t exponent, ModEntry modEntry) {
+	const uint64_t auxmodsq = modEntry.auxmodsq;
+	uint64_t power = REDC(auxmodsq, modEntry);
+	base = toMontgomeryForm(base, modEntry);
+	while (exponent > 0) {
+		if ((exponent & 0b1) == 1) {
+			power = intermul(power, base, modEntry);
+		}
+		base = intermul(base, base, modEntry);
+		exponent >>= 1;
+	}
+	return fromMontgomeryForm(power, modEntry);
+}
+
+uint64_t montexpeven(uint64_t base, uint64_t exponent, ModEntry modEntry) {
+	const uint64_t modulus = modEntry.modulus;
+	const uint64_t pwr2 = __builtin_ctzll(modulus);
+	const uint64_t modpwr2 = (1ULL << pwr2);
+	const uint64_t odd = modulus >> pwr2;
+	const ModEntry oddEntry = makeModEntry(odd, modEntry.neginv, modEntry.auxmodsq, modEntry.totient);
+	const uint64_t result1 = montexppwr2(base, exponent, modpwr2);
+	const uint64_t result2 = montexpodd(base, exponent, oddEntry);
+	return semiCRT(result1, makeModEntry(modpwr2, 0, 0, 0), result2, oddEntry, modulus);
+}
+
+uint64_t montexp(uint64_t base, uint64_t exponent, ModEntry modEntry) {
+	const uint64_t modulus = modEntry.modulus;
+	if (__builtin_popcountll(modulus) == 1) {
+		// modulus is a power of 2.
+		return montexppwr2(base, exponent, modulus);
+	}
+	if ((modulus & 0b1) == 0) {
+		// modulus is an even number but not a power of 2.
+		return montexpeven(base,exponent, modEntry);
+	}
+	// modulus is odd.
+	return montexpodd(base, exponent, modEntry);
+}
+
+uint64_t invmod(uint64_t residue, ModEntry modEntry) {
+	const uint64_t totient = modEntry.totient;
+	return montexp(residue, totient - 1, modEntry);
+}
+
+int8_t legendre(uint64_t residue, ModEntry modEntry) {
+	const uint64_t prime = modEntry.modulus;
+	const uint64_t power = montexp(residue, (prime-1)/2, modEntry);
+	return (power > 1) ? -1 : power;
+}
+
 uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2, uint64_t modr) {
 	uint64_t mod1 = entry1.modulus;
 	uint64_t mod2 = entry2.modulus;
