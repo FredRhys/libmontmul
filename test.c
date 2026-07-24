@@ -117,10 +117,33 @@ void testIncreasePrimePower(void) {
     }
 }
 
+void testExp(void) {
+    {
+        ModEntry modEntry = makeModEntry(5, 3689348814741910323, 1, 4);
+        assert(montexp(2, 3, modEntry) == 3);
+        assert(montexp(2, 4, modEntry) == 1);
+        assert(montexp(3, 4, modEntry) == 1);
+        assert(montexp(4, 4, modEntry) == 1);
+    }{
+        ModEntry modEntry = makeModEntry(10, 3689348814741910323, 1, 4);
+        assert(montexp(2, 3, modEntry) == 8);
+        assert(montexp(3, 4, modEntry) == 1);
+        assert(montexp(7, 4, modEntry) == 1);
+        assert(montexp(9, 4, modEntry) == 1);
+    }{
+        ModEntry modEntry = makeModEntry(16, 3689348814741910323, 1, 4);
+        assert(montexp(2, 3, modEntry) == 8);
+        assert(montexp(2, 4, modEntry) == 0);
+        assert(montexp(3, 8, modEntry) == 1);
+        assert(montexp(5, 8, modEntry) == 1);
+    }
+}
+
 int main(void) {
     (void)testArithmetic();
     (void)testEntriesEqual();
     (void)testCombo();
     (void)testIncreasePrimePower();
+    (void)testExp();
     return 0;
 }

@@ -17,6 +17,8 @@ ModEntry primeModEntry(uint64_t prime);
 ModEntry combineCoprimeModEntries(ModEntry operand1, ModEntry operand2);
 ModEntry increasePrimeModEntryPower(ModEntry powerEntry, ModEntry primeEntry);
 uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry);
+uint64_t intermul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry);
+uint64_t montexp(uint64_t base, uint64_t exponent, ModEntry modEntry);
 bool modEntriesEqual(ModEntry operand1, ModEntry operand2);
 
 #endif
