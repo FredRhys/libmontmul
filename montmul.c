@@ -1,5 +1,14 @@
 #include "montmul.h"
 
+uint64_t addmod(uint64_t augend, uint64_t addend, uint64_t modulus) {
+	const uint64_t SUM = augend + addend;
+	return (SUM >= modulus) ? (SUM - modulus) : SUM;
+}
+
+uint64_t submod(uint64_t minuend, uint64_t subtrahend, uint64_t modulus) {
+	return (subtrahend > minuend) ? minuend + modulus - subtrahend : minuend - subtrahend;
+}
+
 uint64_t REDC(__uint128_t operand, ModEntry modEntry) {
 	const uint64_t modulus = modEntry.modulus;
 	const uint64_t m = ((__uint128_t)(operand & UINT64_MAX) * modEntry.neginv) & UINT64_MAX;

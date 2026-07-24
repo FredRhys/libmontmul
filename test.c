@@ -2,6 +2,10 @@
 #include <assert.h>
 #include <stdio.h>
 
+void testAddSub(void) {
+    assert(addmod(3, 4, 5) == 2);
+    assert(submod(3, 4, 5) == 4);
+}
 
 void testArithmetic(void) {
     // Odd prime moduli
@@ -155,6 +159,7 @@ void testNT(void) {
 }
 
 int main(void) {
+    (void)testAddSub();
     (void)testArithmetic();
     (void)testEntriesEqual();
     (void)testCombo();

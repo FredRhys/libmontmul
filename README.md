@@ -20,6 +20,10 @@ This was initially implemented for my fourth-year university project, and is the
   * Takes as input two ModEntries and returns the ModEntry associated with the product of the inputs' moduli. Only works as intended if the moduli of the inputs are coprime.
 
 ## Arithmetic
+* ```uint64_t addmod(uint64_t augend, uint64_t addend, uint64_t modulus)```
+  * Performs modular addition.
+* ```uint64_t submod(uint64_t minuend, uint64_t subtrahend, uint64_t modulus)```
+  * Performs modular subtraction.
 * ```uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry)```
   * Performs a montgomery multiplication on two integers modulo the modulus containted in the ModEntry. This need not be given integers already in Montgomery form.
 * ```uint64_t intermul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry)```
