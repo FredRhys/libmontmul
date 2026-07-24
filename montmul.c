@@ -126,7 +126,7 @@ uint64_t invmod(uint64_t residue, ModEntry modEntry) {
 int8_t legendre(uint64_t residue, ModEntry modEntry) {
 	const uint64_t prime = modEntry.modulus;
 	const uint64_t power = montexp(residue, (prime-1)/2, modEntry);
-	return (power > 1) ? -1 : power;
+	return (power > 1) ? -1 : (int8_t)power;
 }
 
 uint64_t semiCRT(uint64_t res1, ModEntry entry1, uint64_t res2, ModEntry entry2, uint64_t modr) {
