@@ -2,6 +2,8 @@
 C library for performing fast modular multiplication. This library provides an implementation of [Montgomery modular multiplication](https://en.wikipedia.org/wiki/Montgomery_modular_multiplication), which eliminates the need for integer division. It works by way of an auxiliary modulus, $R$, which we set to $2^{64}$.
 
 This was initially implemented for my fourth-year university project, and is the first step in a reimplementation thereof.
+This project is intended to be used when modular arithmetic is required modulo every modulus within a certain range.
+This iteration is intended to be performed by iterating over prime moduli, and constructing composite moduli therefrom.
 
 ## ModEntries
 ```libmontmul``` accomplishes the above by using a ```struct``` called a ```ModEntry```. Its structure is as follows:
