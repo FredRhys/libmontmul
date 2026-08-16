@@ -37,7 +37,7 @@ This iteration is intended to be performed by iterating over prime moduli, and c
 ## Number-theoretic
 * ```uint64_t invmod(uint64_t residue, ModEntry modEntry)```
   * Given a residue coprime with the modulus of the ModEntry, returns the modular inverse of the residue.
-* ```uint64_t legendre(uint64_t residue, ModEntry modEntry)```
+* ```int8_t legendre(uint64_t residue, ModEntry modEntry)```
   * Calculates the [Legendre symbol](https://en.wikipedia.org/wiki/Legendre_symbol) of the residue with regard to the modulus of the ModEntry.
 
 ## Comparison
