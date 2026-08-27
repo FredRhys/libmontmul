@@ -7,9 +7,9 @@ This iteration is intended to be performed by iterating over prime moduli, and c
 
 ## ModEntries
 ```libmontmul``` accomplishes the above by using a ```struct``` called a ```ModEntry```. Its structure is as follows:
-* ```uint64_t modulus```: this stores the modulus under consideration, say, $N$.
-* ```uint64_t neginv```: this stores a residue (say, $N'$) modulo $R=2^{64}$, such that $NN'\equiv-1\pmod{R}$.
-* ```uint64_t auxmodsq```: this stores the residue $R^{2}\pmod{N}$.
+* ```uint64_t modulus```: this stores the modulus under consideration, say, _N_.
+* ```uint64_t neginv```: this stores a residue (say, _N'_) modulo _R_=2⁶⁴.
+* ```uint64_t auxmodsq```: this stores the residue *R*² modulo _N_.
 * ```uint64_t totient```: this stores the result of [Euler's totient function](https://en.wikipedia.org/wiki/Euler%27s_totient_function) on the modulus. Useful for speeding up calculations, including exponentiation and modular inverses.
 
 ## Creating new ModEntries

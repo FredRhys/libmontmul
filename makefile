@@ -7,12 +7,17 @@ CFLAGS = -std=c23\
 		 -fsanitize=undefined\
 		 -fsanitize=address
 
-.PHONY: test
 test: test.o montmul.o
-	$(LD) $(CFLAGS) -o test test.o montmul.o 
+	$(LD) $(CFLAGS) test.o montmul.o -o test
 
 test.o: test.c montmul.h
+	$(LD) $(CFLAGS) -c test.c -o test.o
 
 montmul.o: montmul.c montmul.h
+	$(LD) $(CFLAGS) -c montmul.c -o montmul.o
+
+.PHONY: clean
+clean:
+	rm -rf test test.o montmul.o
 
 default: test
