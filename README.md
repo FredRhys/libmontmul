@@ -1,5 +1,5 @@
 # libmontmul
-C library for performing fast modular multiplication. This library provides an implementation of [Montgomery modular multiplication](https://en.wikipedia.org/wiki/Montgomery_modular_multiplication), which eliminates the need for integer division. It works by way of an auxiliary modulus, $R$, which we set to $2^{64}$.
+C library for performing fast modular multiplication. This library provides an implementation of [Montgomery modular multiplication](https://en.wikipedia.org/wiki/Montgomery_modular_multiplication), which eliminates the need for integer division. It works by way of an auxiliary modulus, _R_=2&#8310;&#8308;.
 
 This was initially implemented for my fourth-year university project, and is the first step in a reimplementation thereof.
 This project is intended to be used when modular arithmetic is required modulo every modulus within a certain range.
@@ -8,8 +8,8 @@ This iteration is intended to be performed by iterating over prime moduli, and c
 ## ModEntries
 ```libmontmul``` accomplishes the above by using a ```struct``` called a ```ModEntry```. Its structure is as follows:
 * ```uint64_t modulus```: this stores the modulus under consideration, say, _N_.
-* ```uint64_t neginv```: this stores a residue (say, _N'_) modulo _R_=2⁶⁴.
-* ```uint64_t auxmodsq```: this stores the residue *R*² modulo _N_.
+* ```uint64_t neginv```: this stores a residue (say, _N'_) modulo _R_ such that *NN'*&#8801;&minus;1 modulo _R_.
+* ```uint64_t auxmodsq```: this stores the residue *R*&sup2; modulo _N_.
 * ```uint64_t totient```: this stores the result of [Euler's totient function](https://en.wikipedia.org/wiki/Euler%27s_totient_function) on the modulus. Useful for speeding up calculations, including exponentiation and modular inverses.
 
 ## Creating new ModEntries
