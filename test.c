@@ -158,6 +158,22 @@ void testNT(void) {
     }
 }
 
+void testSqrt(void) {
+    {
+        ModEntry modEntry = makeModEntry(7, 10540996613548315209ULL, 4, 6);;
+        assert(sqrtmod(1, modEntry) == 1);
+        assert(sqrtmod(2, modEntry) == 3);
+        assert(sqrtmod(4, modEntry) == 2);
+        assert(sqrtmod(9, modEntry) == 3);
+    }
+    {
+        ModEntry modEntry = makeModEntry(13, 12770822820260458811ULL, 9, 12);;
+        assert(sqrtmod(1, modEntry) == 1);
+        fprintf(stdout, "%"PRIu64"\n", sqrtmod(10, modEntry));
+        assert(sqrtmod(10, modEntry) == 6);
+    }
+}
+
 int main(void) {
     (void)testAddSub();
     (void)testArithmetic();
@@ -166,5 +182,6 @@ int main(void) {
     (void)testIncreasePrimePower();
     (void)testExp();
     (void)testNT();
+    (void)testSqrt();
     return 0;
 }
