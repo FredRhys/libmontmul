@@ -33,6 +33,8 @@ This iteration is intended to be performed by iterating over prime moduli, and c
   * Performs a montgomery multiplication on two integers already in Montgomery form. It does not convert them back from Montgomery form.
 * ```uint64_t montexp(uint64_t base, uint64_t exponent, ModEntry modEntry)```
   * Performs modular exponentiation using an iterative binary exponentiation implementation. This need not be given a base already in Montgomery form.
+* ```uint64_t sqrtmod(uint64_t residue, ModEntry modEntry)```
+  * Finds a modular square root of the input residue modulo the modulus contained in the ModEntry. This does not perform a quadratic residue test and is only inteded to be run on quadratic residues with prime ModEntry.
 
 ## Number-theoretic
 * ```uint64_t invmod(uint64_t residue, ModEntry modEntry)```

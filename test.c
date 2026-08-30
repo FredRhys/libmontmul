@@ -158,13 +158,34 @@ void testNT(void) {
     }
 }
 
+void testSqrt(void) {
+    {
+        ModEntry modEntry = makeModEntry(7, 10540996613548315209ULL, 4, 6);
+        assert(montexp(sqrtmod(1, modEntry), 2, modEntry) == 1);
+        assert(montexp(sqrtmod(2, modEntry), 2, modEntry) == 2);
+        assert(montexp(sqrtmod(4, modEntry), 2, modEntry) == 4);
+        assert(montexp(sqrtmod(9, modEntry), 2, modEntry) == 2);
+    }
+    {
+        ModEntry modEntry = makeModEntry(13, 12770822820260458811ULL, 9, 12);
+        assert(montexp(sqrtmod(1, modEntry), 2, modEntry) == 1);
+        assert(montexp(sqrtmod(3, modEntry), 2, modEntry) == 3);
+        assert(montexp(sqrtmod(4, modEntry), 2, modEntry) == 4);
+        assert(montexp(sqrtmod(9, modEntry), 2, modEntry) == 9);
+        assert(montexp(sqrtmod(10, modEntry), 2, modEntry) == 10);
+        assert(montexp(sqrtmod(12, modEntry), 2, modEntry) == 12);
+    }
+}
+
 int main(void) {
     (void)testAddSub();
+    (void)testMakePrime();
     (void)testArithmetic();
     (void)testEntriesEqual();
     (void)testCombo();
     (void)testIncreasePrimePower();
     (void)testExp();
     (void)testNT();
+    (void)testSqrt();
     return 0;
 }
