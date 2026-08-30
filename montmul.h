@@ -22,6 +22,7 @@ uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry);
 uint64_t intermul(uint64_t multiplier, uint64_t multiplicand, ModEntry modEntry);
 uint64_t montexp(uint64_t base, uint64_t exponent, ModEntry modEntry);
 uint64_t invmod(uint64_t residue, ModEntry modEntry);
+uint64_t sqrtmod(uint64_t residue, ModEntry modEntry);
 int8_t legendre(uint64_t residue, ModEntry modEntry);
 bool modEntriesEqual(ModEntry operand1, ModEntry operand2);
 
