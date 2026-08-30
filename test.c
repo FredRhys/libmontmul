@@ -179,6 +179,7 @@ void testSqrt(void) {
 
 int main(void) {
     (void)testAddSub();
+    (void)testMakePrime();
     (void)testArithmetic();
     (void)testEntriesEqual();
     (void)testCombo();
