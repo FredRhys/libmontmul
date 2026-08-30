@@ -118,6 +118,18 @@ uint64_t montexp(uint64_t base, uint64_t exponent, ModEntry modEntry) {
 	return montexpodd(base, exponent, modEntry);
 }
 
+uint64_t naiveexp(uint64_t base, uint64_t exponent, uint64_t modulus) {
+	uint64_t power = 1;
+	while (exponent > 0) {
+		if ((exponent & 0b1) == 1) {
+			power = power * base;
+		}
+		base = base * base;
+		exponent >>= 1;
+	}
+	return power % modulus;
+}
+
 uint64_t invmod(uint64_t residue, ModEntry modEntry) {
 	const uint64_t totient = modEntry.totient;
 	return montexp(residue, totient - 1, modEntry);
@@ -227,4 +239,55 @@ bool modEntriesEqual(ModEntry operand1, ModEntry operand2) {
 		operand1.neginv == operand2.neginv &&
 		operand1.auxmodsq == operand2.auxmodsq &&
 		operand1.totient == operand2.totient;
+}
+
+// sqrt
+
+uint64_t leastPwr2(uint64_t t, uint64_t M, ModEntry modEntry) {
+	for (uint64_t i = 1; i < M; i++) {
+		t = montexp(t, 2, modEntry);
+		if (t != 1) {continue;}
+		return i;
+	}
+	return M;
+}
+
+uint64_t findQuadNonres(ModEntry operand) {
+	const uint64_t PRIME = operand.modulus;
+	for (uint64_t i = 2; i < PRIME; i++) {
+		if (legendre(i, operand) >= 0) {continue;}
+		return i;
+	}
+	return 0; //error case. on an odd prime input this should never happen.
+}
+
+uint64_t tonellishanks(uint64_t residue, ModEntry modEntry) {
+	const uint64_t PRIME = modEntry.modulus;
+	const uint64_t PRIME_MINUS_ONE = PRIME - 1;
+	uint64_t z, c, t, R, i, b, M, Q;
+	M = __builtin_ctzll(PRIME_MINUS_ONE);
+	Q = (PRIME_MINUS_ONE) >> M;
+	z = findQuadNonres(modEntry);
+	c = montexp(z, Q, modEntry);
+	t = montexp(residue, Q, modEntry);
+	R = montexp(residue, (Q+1)/2, modEntry);
+	while (t > 0) {
+		if (t == 1) {return R;}
+		i = leastPwr2(t, M, modEntry);
+		b = montexp(c, naiveexp(2, M-i-1, PRIME_MINUS_ONE), modEntry);
+		M = i;
+		c = montexp(b, 2, modEntry);
+		t = montmul(t, c, modEntry);
+		R = montmul(R, b, modEntry);
+	}
+	return 0;
+}
+
+uint64_t sqrtmod(uint64_t residue, ModEntry modEntry) {
+	if (residue <= 1) {return residue;}
+	uint64_t PRIME = modEntry.modulus;
+	if ((PRIME & 0b11) == 3) {
+		return montexp(residue, (PRIME+1)/4, modEntry);
+	}
+	return tonellishanks(residue, modEntry);
 }
