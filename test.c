@@ -177,6 +177,18 @@ void testSqrt(void) {
     }
 }
 
+void testCRT() {
+    {
+        ModEntry modEntry1 = makeModEntry(7, 10540996613548315209ULL, 4, 6);
+        ModEntry modEntry2 = makeModEntry(13, 12770822820260458811ULL, 9, 12);
+        ModEntry modEntryNew = makeModEntry(91, 15000649026972602413ULL, 74, 72);
+        assert(crtCalc(0, modEntry1, 0, modEntry2, modEntryNew) == 0);
+        assert(crtCalc(0, modEntry1, 1, modEntry2, modEntryNew) == 14);
+        assert(crtCalc(1, modEntry1, 0, modEntry2, modEntryNew) == 78);
+        assert(crtCalc(4, modEntry1, 5, modEntry2, modEntryNew) == 18);
+    }
+}
+
 int main(void) {
     (void)testAddSub();
     (void)testMakePrime();
@@ -187,5 +199,6 @@ int main(void) {
     (void)testExp();
     (void)testNT();
     (void)testSqrt();
+    (void)testCRT();
     return 0;
 }

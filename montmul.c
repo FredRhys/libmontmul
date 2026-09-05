@@ -291,3 +291,12 @@ uint64_t sqrtmod(uint64_t residue, ModEntry modEntry) {
 	}
 	return tonellishanks(residue, modEntry);
 }
+
+uint64_t crtCalc(uint64_t residue1, ModEntry entry1, uint64_t residue2, ModEntry entry2, ModEntry newEntry) {
+	const uint64_t MOD1 = entry1.modulus, MOD2 = entry2.modulus;
+    const uint64_t INV1 = invmod(MOD1, entry2);
+    const uint64_t INV2 = invmod(MOD2, entry1);
+    return addmod(
+        montmul(residue1, montmul(MOD2, INV2, newEntry), newEntry),
+        montmul(residue2, montmul(MOD1, INV1, newEntry), newEntry), newEntry.modulus);
+}

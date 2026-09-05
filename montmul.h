@@ -25,5 +25,6 @@ uint64_t invmod(uint64_t residue, ModEntry modEntry);
 uint64_t sqrtmod(uint64_t residue, ModEntry modEntry);
 int8_t legendre(uint64_t residue, ModEntry modEntry);
 bool modEntriesEqual(ModEntry operand1, ModEntry operand2);
+uint64_t crtCalc(uint64_t residue1, ModEntry entry1, uint64_t residue2, ModEntry entry2, ModEntry newEntry);
 
 #endif

@@ -41,6 +41,8 @@ This iteration is intended to be performed by iterating over prime moduli, and c
   * Given a residue coprime with the modulus of the ModEntry, returns the modular inverse of the residue.
 * ```int8_t legendre(uint64_t residue, ModEntry modEntry)```
   * Calculates the [Legendre symbol](https://en.wikipedia.org/wiki/Legendre_symbol) of the residue with regard to the modulus of the ModEntry.
+* ```uint64_t crtCalc(uint64_t residue1, ModEntry entry1, uint64_t residue2, ModEntry entry2, ModEntry newEntry)```
+  * Uses the Chinese remainder theorem to calculate the unique residue congruent to ```residue1``` modulo ```entry1.modulus``` and to ```residue2``` modulo ```entry2.modulus```. Only works if the moduli are coprime.
 
 ## Comparison
 * ```bool modEntriesEqual(ModEntry operand1, ModEntry operand2)```
