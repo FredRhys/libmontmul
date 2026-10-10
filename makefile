@@ -10,7 +10,7 @@ CFLAGS = -std=c23\
 test: test.o montmul.o
 	$(LD) $(CFLAGS) test.o montmul.o -o test
 
-test.o: test.c montmul.h
+test.o: test.c
 	$(LD) $(CFLAGS) -c test.c -o test.o
 
 montmul.o: montmul.c montmul.h
