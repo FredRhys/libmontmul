@@ -1,6 +1,6 @@
 CC = gcc
 LD = $(CC)
-CFLAGS = -std=c23\
+CFLAGS = -std=c11\
 		 -g\
 		 -Wall\
 		 -pedantic\
