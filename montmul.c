@@ -54,7 +54,7 @@ uint64_t montmul(uint64_t multiplier, uint64_t multiplicand, struct libmontmul_t
 		// modulus is a power of 2.
 		return montmulpwr2(multiplier, multiplicand, modulus);
 	}
-	if ((modulus & 0b1) == 0) {
+	if ((modulus & 1) == 0) {
 		// modulus is an even number but not a power of 2.
 		return montmuleven(multiplier, multiplicand, montmul_t);
 	}
@@ -66,7 +66,7 @@ uint64_t montexppwr2(uint64_t base, uint64_t exponent, uint64_t modulus) {
 	const uint64_t bitmask = modulus - 1;
 	uint64_t power = 1;
 	while (exponent > 0) {
-		if ((exponent & 0b1) == 1) {
+		if ((exponent & 1) == 1) {
 			power = ((__uint128_t)power * base) & bitmask;
 		}
 		base = ((__uint128_t)base * base) & bitmask;
@@ -84,7 +84,7 @@ uint64_t montexpodd(uint64_t base, uint64_t exponent, struct libmontmul_t montmu
 	uint64_t power = REDC(auxmodsq, montmul_t);
 	base = toMontgomeryForm(base, montmul_t);
 	while (exponent > 0) {
-		if ((exponent & 0b1) == 1) {
+		if ((exponent & 1) == 1) {
 			power = intermul(power, base, montmul_t);
 		}
 		base = intermul(base, base, montmul_t);
@@ -110,7 +110,7 @@ uint64_t montexp(uint64_t base, uint64_t exponent, struct libmontmul_t montmul_t
 		// modulus is a power of 2.
 		return montexppwr2(base, exponent, modulus);
 	}
-	if ((modulus & 0b1) == 0) {
+	if ((modulus & 1) == 0) {
 		// modulus is an even number but not a power of 2.
 		return montexpeven(base, exponent, montmul_t);
 	}
@@ -121,7 +121,7 @@ uint64_t montexp(uint64_t base, uint64_t exponent, struct libmontmul_t montmul_t
 uint64_t naiveexp(uint64_t base, uint64_t exponent, uint64_t modulus) {
 	uint64_t power = 1;
 	while (exponent > 0) {
-		if ((exponent & 0b1) == 1) {
+		if ((exponent & 1) == 1) {
 			power = power * base;
 		}
 		base = base * base;
@@ -221,10 +221,10 @@ struct libmontmul_t compositeLibmontmul_t(struct libmontmul_t multiplier, struct
 	const uint64_t totient1 = multiplier.totient;
 	const uint64_t totient2 = multiplicand.totient;
 
-	if ((modulus1 & 0b1) == 0) {
+	if ((modulus1 & 1) == 0) {
 		return makeLibmontmul_t(modulusr, neginv2, auxmodsq2, totient2);
 	}
-	if ((modulus2 & 0b1) == 0) {
+	if ((modulus2 & 1) == 0) {
 		return makeLibmontmul_t(modulusr, neginv1, auxmodsq1, totient1);
 	}
 
@@ -286,7 +286,7 @@ uint64_t tonellishanks(uint64_t residue, struct libmontmul_t montmul_t) {
 uint64_t sqrtmod(uint64_t residue, struct libmontmul_t montmul_t) {
 	if (residue <= 1) {return residue;}
 	uint64_t PRIME = montmul_t.modulus;
-	if ((PRIME & 0b11) == 3) {
+	if ((PRIME & 11) == 3) {
 		return montexp(residue, (PRIME+1)/4, montmul_t);
 	}
 	return tonellishanks(residue, montmul_t);
