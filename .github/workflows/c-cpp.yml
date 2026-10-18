@@ -5,13 +5,20 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-linux:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-    - name: make
+    - name: make build directory
+      run: mkdir build
+    - name: configure
+      working-directory: ./build
+      run: cmake ..
+    - name: compile
+      working-directory: ./build
       run: make
     - name: test
-      run: ./test
+      working-directory: ./in
+      run: test
