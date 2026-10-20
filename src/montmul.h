@@ -1,7 +1,6 @@
 #ifndef MONTMUL_H
 
 #define MONTMUL_H
-#include <stdbit.h>
 #include <inttypes.h>
 #include <stdbool.h>
 
