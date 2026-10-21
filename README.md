@@ -49,4 +49,5 @@ This iteration is intended to be performed by iterating over prime moduli, and c
   * Returns true if the operands are equal (i.e., their values are identitcal), and false otherwise.
 
 ## Requirements
-This project was tested only on Linux. Providing a working test file for Windows or Mac is outside the scope of this project.
+CMake with GCC is required to compile the tests.
+For compiling the tests on Windows, see [WINDOWS.md](WINDOWS.md).
