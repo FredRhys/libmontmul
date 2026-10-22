@@ -51,4 +51,4 @@ jobs:
       run: cmake --build .
     - name: test
       working-directory: ./bin
-      run: test
+      run: ./test.exe
