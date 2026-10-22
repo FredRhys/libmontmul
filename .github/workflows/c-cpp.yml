@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-linux:
+  test-linux:
 
     runs-on: ubuntu-latest
 
@@ -18,7 +18,25 @@ jobs:
       run: cmake ..
     - name: compile
       working-directory: ./build
-      run: make
+      run: cmake --build .
     - name: test
-      working-directory: ./in
+      working-directory: ./bin
+      run: ./test
+
+  test-windows:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v6
+    - name: make build directory
+      run: mkdir build
+    - name: configure
+      working-directory: ./build
+      run: cmake .. --preset windows
+    - name: compile
+      working-directory: ./build
+      run: cmake --build .
+    - name: test
+      working-directory: ./bin
       run: test
