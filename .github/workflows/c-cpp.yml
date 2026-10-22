@@ -30,12 +30,15 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - name: install msys2
-    - uses: msys2/setup-msys2@v2
+      uses: msys2/setup-msys2@v2
       with:
         msystem: UCRT64
     - name: install gcc
-    - shell: msys2 {0}
+      shell: msys2 {0}
       run: pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain -y
+    - name: verify gcc installation
+      run: |
+        gcc --version
     - name: make build directory
       run: mkdir build
     - name: configure
