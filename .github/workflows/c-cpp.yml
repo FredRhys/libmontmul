@@ -35,7 +35,7 @@ jobs:
         msystem: UCRT64
     - name: install gcc
       shell: msys2 {0}
-      run: pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain -y
+      run: pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain --noconfirm
     - name: verify gcc installation
       run: |
         gcc --version
