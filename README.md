@@ -50,4 +50,5 @@ This iteration is intended to be performed by iterating over prime moduli, and c
 
 ## Requirements
 CMake with GCC is required to compile the tests.
+For compiling the tests on Linux, see [LINUX.md](LINUX.md).
 For compiling the tests on Windows, see [WINDOWS.md](WINDOWS.md).
