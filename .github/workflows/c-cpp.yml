@@ -29,11 +29,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
-    - name: Set up MinGW
-      uses: egor-tensin/setup-mingw@v3
+    - uses: msys2/setup-msys2@v2
       with:
-        platform: x64
-        cc: 0
+        msystem: UCRT64
     - name: make build directory
       run: mkdir build
     - name: configure
